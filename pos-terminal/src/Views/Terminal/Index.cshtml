@@ -18,22 +18,22 @@
 
 
 <div>
-    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "ExportFullReport"})">Export</a>
+    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "ExportFullReport"})">Export Excel</a>
 </div>
 
 <div>
-    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "Report"})">Filter by Currency</a>
+    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "Report"})">Totals by Currency</a>
 </div>
 
-@using (Html.BeginForm("Filter","Terminal",FormMethod.Get))
+@using (Html.BeginForm("TotalByCurrency","Terminal",FormMethod.Get))
 {
     <b>Filter by</b>
-    @Html.RadioButton("findBy", "KGS",true) <text>KGS</text>
-    @Html.RadioButton("findBy", "KZT") <text>KZT</text>
-    @Html.RadioButton("findBy", "USD") <text>USD</text>
-    @Html.RadioButton("findBy", "EUR") <text>EUR</text>
+    @Html.RadioButton("totalBy", "KGS",true) <text>KGS</text>
+    @Html.RadioButton("totalBy", "KZT") <text>KZT</text>
+    @Html.RadioButton("totalBy", "USD") <text>USD</text>
+    @Html.RadioButton("totalBy", "EUR") <text>EUR</text>
     <br />
-    <input type="submit" value="Filter" />
+    <input type="submit" value="Total currency" />
 }
 
 <table class="table">
