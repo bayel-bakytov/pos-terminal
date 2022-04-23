@@ -45,7 +45,7 @@ namespace EatAndDrink.Services
         }
 
 
-        public FileContentResult ExportByCurrency(List<TotalDevice> list)
+        public FileContentResult ExportByCurrency(List<TotalByCurrency> list)
         {
             using (XLWorkbook workbook = new XLWorkbook(XLEventTracking.Disabled))
             {
@@ -58,17 +58,8 @@ namespace EatAndDrink.Services
                 //нумерация строк/столбцов начинается с индекса 1 (не 0)
                 for (int i = 0; i < list.Count; i++)
                 {
-                    worksheet.Cell(i + 2, 1).Value = list[i].DeviceCode;
-                    if(list[i].TotalKgs != 0){
-                        worksheet.Cell(i + 2, 2).Value = list[i].TotalKgs;
-                    }else if(list[i].TotalKzt != 0){
-                        worksheet.Cell(i + 2, 2).Value = list[i].TotalKzt;
-                    }else if(list[i].TotalUsd != 0){
-                        worksheet.Cell(i + 2, 2).Value = list[i].TotalUsd;
-                    }else if(list[i].TotalEur != 0){
-                        worksheet.Cell(i + 2, 2).Value = list[i].TotalEur;
-                    }
-                    
+                    worksheet.Cell(i + 2, 1).Value = list[i].CardNumber;
+                    worksheet.Cell(i + 2, 2).Value = list[i].Total;  
                 }
 
                 using (var stream = new MemoryStream())

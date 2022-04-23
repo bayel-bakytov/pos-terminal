@@ -11,7 +11,7 @@ namespace EatAndDrink.Controllers
         private ExcelService excelService;
         private static TerminalDBContext TerminalDB;
         private List<Terminal> listOfTerminal;
-        private List<TotalDevice> tot;
+        private List<TotalByCurrency> tot;
         private string help = "123";
         [HttpGet]
         public IActionResult Index()
@@ -80,7 +80,7 @@ namespace EatAndDrink.Controllers
         public IActionResult TotalCurrency(string totalBy)
         {
             tot = terminalService.totalByCurrency(totalBy);
-            help = totalBy;
+            //help = totalBy;
             //foreach (var a in tot)
             //{
             //    Console.WriteLine("this a " + a.TotalKgs);
@@ -97,7 +97,7 @@ namespace EatAndDrink.Controllers
             //}
             Console.WriteLine("Help" + help);
             excelService = new ExcelService();
-            return excelService.ExportByCurrency(terminalService.totalByCurrency(help));
+            return excelService.ExportByCurrency(tot);
         }
 
 

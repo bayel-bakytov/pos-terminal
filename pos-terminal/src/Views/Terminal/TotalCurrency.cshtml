@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EatAndDrink.ViewModels.TotalDevice>
+﻿@model IEnumerable<EatAndDrink.ViewModels.TotalByCurrency>
 
 <div>
     <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "ExportByCurrency"})">Экспорт в Excel</a>
@@ -16,32 +16,8 @@
         <tr>
             <td>@item.CardNumber</td>
             <td>
-                @{
-                    if (item.TotalEur != 0)
-                    {
-                        @item.TotalEur
-                    }
-                    else if (item.TotalUsd != 0)
-                    {
-                        @item.TotalUsd
-                    }
-                    else if (item.TotalKgs != 0)
-                    {
-                        @item.TotalKgs
-                    }
-                    else if (item.TotalKzt != 0)
-                    {
-                        @item.TotalKzt
-                    }
-                }
+                @item.Total
             </td>
-
-
-
-
-
-
-
         </tr>
     }
 </table>

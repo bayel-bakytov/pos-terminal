@@ -107,7 +107,61 @@ namespace EatAndDrink.Services
             }
         }
 
-        public List<TotalDevice> totalByCurrency(string curren)
+        //public List<TotalDevice> totalByCurrency(string curren)
+        //{
+        //    Console.WriteLine(curren);
+
+        //    using (TerminalDB = new TerminalDBContext())
+        //    {
+        //        double total = 0;
+        //        List<Terminal> devices = TerminalDB.Terminal.ToList();
+        //        list = devices.Where(x => x.Curr.Equals(curren) || curren == null).ToList();
+
+        //        List<TotalDevice> totalDevices = new List<TotalDevice>();
+        //        TotalDevice totalDevice;
+
+        //        destinct = list.Select(c => c.CardNumber).Distinct().ToList();
+
+        //        for (int j = 0; j < destinct.Count; j++)
+        //        {
+        //            total = 0;
+        //            devices = filter("CardNumber", destinct[j].ToString());
+
+
+        //            for (int i = 0; i < list.Count; i++)
+        //            {
+        //                total += list[i].Amnt;
+
+        //            }
+
+        //            totalDevice = new TotalDevice();
+        //            totalDevice.CardNumber = destinct[j];
+        //            if (curren.Equals("KGS"))
+        //            {
+        //                totalDevice.TotalKgs = total;
+        //            }
+        //            else if (curren.Equals("EUR"))
+        //            {
+        //                totalDevice.TotalEur = total;
+        //            }
+        //            else if (curren.Equals("KZT"))
+        //            {
+        //                totalDevice.TotalKzt = total;
+        //            }
+        //            else if (curren.Equals("USD"))
+        //            {
+        //                totalDevice.TotalUsd = total;
+        //            }
+
+
+        //            totalDevices.Add(totalDevice);
+        //        }
+        //        return totalDevices;
+        //    }
+        //}
+
+
+        public List<TotalByCurrency> totalByCurrency(string curren)
         {
             Console.WriteLine(curren);
 
@@ -117,48 +171,30 @@ namespace EatAndDrink.Services
                 List<Terminal> devices = TerminalDB.Terminal.ToList();
                 list = devices.Where(x => x.Curr.Equals(curren) || curren == null).ToList();
 
-                List<TotalDevice> totalDevices = new List<TotalDevice>();
-                TotalDevice totalDevice;
-                
+                List<TotalByCurrency> totalDevices = new List<TotalByCurrency>();
+                TotalByCurrency totalDevice;
+
                 destinct = list.Select(c => c.CardNumber).Distinct().ToList();
 
                 for (int j = 0; j < destinct.Count; j++)
                 {
                     total = 0;
                     devices = filter("CardNumber", destinct[j].ToString());
-                   
-                   
+
+
                     for (int i = 0; i < list.Count; i++)
                     {
                         total += list[i].Amnt;
-                      
                     }
 
-                    totalDevice = new TotalDevice();
+                    totalDevice = new TotalByCurrency();
                     totalDevice.CardNumber = destinct[j];
-                    if (curren.Equals("KGS"))
-                    {
-                        totalDevice.TotalKgs = total;
-                    }
-                    else if (curren.Equals("EUR"))
-                    {
-                        totalDevice.TotalEur = total;
-                    }
-                    else if (curren.Equals("KZT"))
-                    {
-                        totalDevice.TotalKzt = total;
-                    }
-                    else if (curren.Equals("USD"))
-                    {
-                        totalDevice.TotalUsd = total;
-                    }
-                  
-                    
+                    totalDevice.Total = total;
+                   // totalDevice.Curr = curren;
                     totalDevices.Add(totalDevice);
                 }
                 return totalDevices;
             }
         }
-
     }
 }
