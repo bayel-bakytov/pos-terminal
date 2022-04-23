@@ -1,0 +1,30 @@
+﻿@model IEnumerable<EatAndDrink.Models.Terminal>
+
+@{
+    ViewData["Title"] = "Filter Page";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>ID</td>
+            <td>DeviceCode</td>
+            <td>Amount</td>
+            <td>Currency</td>
+            <td>Card Number</td>
+            <td>Date</td>
+        </tr>
+    </thead>
+ @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.DeviceCode</td>
+            <td>@item.Amnt</td>
+            <td>@item.Curr</td>
+            <td>@item.CardNumber</td>
+            <td>@item.OperDateTime</td>
+        </tr>
+    }
+  </table>
+

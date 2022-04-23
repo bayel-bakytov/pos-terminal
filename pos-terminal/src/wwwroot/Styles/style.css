@@ -1,0 +1,27 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+}
+
+.content {
+    max-width: 800px;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.btn {
+    max-width: 100px;
+    background: gray;
+    text-align: center;
+    padding: 10px;
+}
+
+table {
+    height: 25vh;
+}
+
+tr:first-child > td {
+    font-weight: bolder;
+}

@@ -1,0 +1,27 @@
+﻿@model IEnumerable<EatAndDrink.ViewModels.TotalDevice>
+<div>
+    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "ExportByCurrency"})">Экспорт в Excel</a>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <td>DeviceCode</td>
+            <td>Total USD</td>
+            <td>Total EUR</td>
+            <td>Total KZT</td>
+            <td>Total KGS</td>
+            
+        </tr>
+    </thead>
+ @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.DeviceCode</td>
+            <td>@item.TotalUsd</td>
+            <td>@item.TotalEur</td>
+            <td>@item.TotalKzt</td>
+            <td>@item.TotalKgs</td>
+        </tr>
+    }
+  </table>
+

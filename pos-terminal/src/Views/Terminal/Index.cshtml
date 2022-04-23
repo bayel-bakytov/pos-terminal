@@ -1,0 +1,66 @@
+﻿@model IEnumerable<EatAndDrink.Models.Terminal>
+
+@{
+    ViewData["Title"] = "Terminal Page";
+}
+
+
+@using (Html.BeginForm("Filter","Terminal",FormMethod.Get))
+{
+    <b>Filter by</b>
+    @Html.RadioButton("filterBy", "CardNumber",true) <text>Card number</text>
+    @Html.RadioButton("filterBy", "DeviceCode") <text>Device code</text>
+    @Html.RadioButton("filterBy", "Amnt") <text>Amount</text>
+    @Html.RadioButton("filterBy", "Curr") <text>Currency</text>
+    <br />
+    @Html.TextBox("filter") <input type="submit" value="Filter" />
+}
+
+
+<div>
+    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "ExportFullReport"})">Export</a>
+</div>
+
+<div>
+    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "Report"})">Filter by Currency</a>
+</div>
+
+@using (Html.BeginForm("Filter","Terminal",FormMethod.Get))
+{
+    <b>Filter by</b>
+    @Html.RadioButton("findBy", "KGS",true) <text>KGS</text>
+    @Html.RadioButton("findBy", "KZT") <text>KZT</text>
+    @Html.RadioButton("findBy", "USD") <text>USD</text>
+    @Html.RadioButton("findBy", "EUR") <text>EUR</text>
+    <br />
+    <input type="submit" value="Filter" />
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>ID</td>
+            <td>DeviceCode</td>
+            <td>Amount</td>
+            <td>Currency</td>
+            <td>Card Number</td>
+            <td>Date</td>
+            <td>Actions</td>
+        </tr>
+    </thead>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.DeviceCode</td>
+            <td>@item.Amnt</td>
+            <td>@item.Curr</td>
+            <td>@item.CardNumber</td>
+            <td>@item.OperDateTime</td>
+            <td>
+                <a class="btn" asp-controller="Terminal" asp-action="More" asp-route-card="@item.CardNumber">more</a>
+            </td>
+        </tr>
+    }
+    </table>
+
