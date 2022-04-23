@@ -6,8 +6,9 @@ namespace EatAndDrink.Services
     public class TerminalService   {
         private static TerminalDBContext TerminalDB;
         private List<Terminal> list;
-        private List<TotalDevice> totalBy;
-        private List<int> destinct = new List<int>();
+        private List<int> destinct;
+        private List<TotalDevice> totalDevices;
+
         public List<Terminal> moreAboutCardNumber(int card)
         {
             using (TerminalDB = new TerminalDBContext())
@@ -61,7 +62,6 @@ namespace EatAndDrink.Services
                 double totalKZT = 0;
                 double totalEUR = 0;
                 list = TerminalDB.Terminal.ToList();
-                List<TotalDevice> totalDevices = new List<TotalDevice>();
                 List<Terminal>devices = TerminalDB.Terminal.ToList();
                 TotalDevice totalDevice;
                 destinct = list.Select(c => c.DeviceCode).Distinct().ToList();
@@ -106,6 +106,58 @@ namespace EatAndDrink.Services
             }
         }
 
-        
+        public List<TotalDevice> totalByCurrency()
+        {
+            using (TerminalDB = new TerminalDBContext())
+            {
+                double totalKGS = 0;
+                double totalUSD = 0;
+                double totalKZT = 0;
+                double totalEUR = 0;
+                list = TerminalDB.Terminal.ToList();
+                List<Terminal> devices = TerminalDB.Terminal.ToList();
+                TotalDevice totalDevice;
+                destinct = list.Select(c => c.DeviceCode).Distinct().ToList();
+
+                for (int j = 0; j < destinct.Count; j++)
+                {
+                    totalKGS = 0;
+                    totalUSD = 0;
+                    totalKZT = 0;
+                    totalEUR = 0;
+                    devices = filter("DeviceCode", destinct[j].ToString());
+                    for (int i = 0; i < devices.Count; i++)
+                    {
+                        if (devices[i].Curr.Equals("KGS"))
+                        {
+                            totalKGS += devices[i].Amnt;
+                        }
+                        else if (devices[i].Curr.Equals("KZT"))
+                        {
+                            totalKZT += devices[i].Amnt;
+                        }
+                        else if (devices[i].Curr.Equals("USD"))
+                        {
+                            totalUSD += devices[i].Amnt;
+                        }
+                        else if (devices[i].Curr.Equals("EUR"))
+                        {
+                            totalEUR += devices[i].Amnt;
+                        }
+                    }
+                    totalDevice = new TotalDevice()
+                    {
+                        DeviceCode = destinct[j],
+                        TotalKgs = totalKGS,
+                        TotalUsd = totalUSD,
+                        TotalKzt = totalKZT,
+                        TotalEur = totalEUR
+                    };
+                    totalDevices.Add(totalDevice);
+                }
+                return totalDevices;
+            }
+        }
+
     }
 }
