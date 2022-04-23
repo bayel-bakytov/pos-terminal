@@ -14,18 +14,18 @@ namespace EatAndDrink.ViewModels
 
         [Required]
         [Display(Name = "Total Usd")]
-        public double TotalUsd { get; set; }
+        public double TotalUsd { get; set; } = 0;
 
         [Required]
         [Display(Name = "Total Kgs")]
-        public double TotalKgs { get; set; }
+        public double TotalKgs { get; set; } = 0;
 
         [Required]
         [Display(Name = "Total Eur")]
-        public double TotalEur { get; set; }
+        public double TotalEur { get; set; } = 0;
 
         [Required]
         [Display(Name = "Total Kzt")]
-        public double TotalKzt { get; set; }
+        public double TotalKzt { get; set; } = 0;
     }
 }

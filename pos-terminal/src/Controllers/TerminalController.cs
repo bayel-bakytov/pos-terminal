@@ -11,7 +11,8 @@ namespace EatAndDrink.Controllers
         private ExcelService excelService;
         private static TerminalDBContext TerminalDB;
         private List<Terminal> listOfTerminal;
-
+        private List<TotalDevice> tot;
+        private string help = "123";
         [HttpGet]
         public IActionResult Index()
         {
@@ -70,10 +71,35 @@ namespace EatAndDrink.Controllers
             return excelService.ExportFull(TerminalDB.Terminal.ToList());
         }
 
-        public ActionResult ExportByCurrency()
+        public ActionResult ExportByTotalCurrency()
         {
             excelService = new ExcelService();
-            return excelService.ExportByCurrency(terminalService.totalByDevice());
+            return excelService.ExportByTotalCurrency(terminalService.totalByDevice());
         }
+
+        public IActionResult TotalCurrency(string totalBy)
+        {
+            tot = terminalService.totalByCurrency(totalBy);
+            help = totalBy;
+            //foreach (var a in tot)
+            //{
+            //    Console.WriteLine("this a " + a.TotalKgs);
+            //}
+            //excelService = new ExcelService();
+            //excelService.ExportByCurrency(tot);
+            return View(terminalService.totalByCurrency(totalBy));
+        }
+        public ActionResult ExportByCurrency()
+        {
+            //foreach (var a in tot)
+            //{
+            //    Console.WriteLine(a.TotalKgs);
+            //}
+            Console.WriteLine("Help" + help);
+            excelService = new ExcelService();
+            return excelService.ExportByCurrency(terminalService.totalByCurrency(help));
+        }
+
+
     }
 }
