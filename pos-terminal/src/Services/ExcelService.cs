@@ -2,6 +2,11 @@
 using EatAndDrink.Models;
 using EatAndDrink.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+
 
 namespace EatAndDrink.Services
 {
@@ -44,7 +49,6 @@ namespace EatAndDrink.Services
             }
         }
 
-
         public FileContentResult ExportByCurrency(List<TotalByCurrency> list)
         {
             using (XLWorkbook workbook = new XLWorkbook(XLEventTracking.Disabled))
@@ -59,7 +63,7 @@ namespace EatAndDrink.Services
                 for (int i = 0; i < list.Count; i++)
                 {
                     worksheet.Cell(i + 2, 1).Value = list[i].CardNumber;
-                    worksheet.Cell(i + 2, 2).Value = list[i].Total;  
+                    worksheet.Cell(i + 2, 2).Value = list[i].Total;
                 }
 
                 using (var stream = new MemoryStream())
@@ -113,5 +117,68 @@ namespace EatAndDrink.Services
             }
         }
 
+        public FileContentResult ExportTotal(List<TotalByCurrency> list)
+        {
+            using (XLWorkbook workbook = new XLWorkbook(XLEventTracking.Disabled))
+            {
+                var worksheet = workbook.Worksheets.Add("Brands");
+
+                worksheet.Cell("A1").Value = "Card Number";
+                worksheet.Cell("B1").Value = "Total by KGS";
+                worksheet.Row(1).Style.Font.Bold = true;
+
+                //нумерация строк/столбцов начинается с индекса 1 (не 0)
+                for (int i = 0; i < list.Count; i++)
+                {
+                    worksheet.Cell(i + 2, 1).Value = list[i].CardNumber;
+                    worksheet.Cell(i + 2, 2).Value = list[i].Total;
+                }
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    stream.Flush();
+
+                    return new FileContentResult(stream.ToArray(),
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                    {
+                        FileDownloadName = $"brands_{DateTime.UtcNow.ToShortDateString()}.xlsx"
+                    };
+                }
+            }
+        }
+
+        //public List<Terminal> Import(HttpPostedFileBase fileExcel)
+        //{
+        //    List<Terminal> terminals = new List<Terminal>();
+        //    Terminal viewModel = null;
+        //    using (XLWorkbook workBook = new XLWorkbook(fileExcel, XLEventTracking.Disabled))
+        //    {
+        //        foreach (IXLWorksheet worksheet in workBook.Worksheets)
+        //        {
+
+
+        //            foreach (IXLRow row in worksheet.RowsUsed().Skip(1))
+        //            {
+        //                try
+        //                {
+        //                    viewModel = new Terminal();
+        //                    viewModel.DeviceCode = Convert.ToInt32(row.Cell(1).Value);
+        //                    viewModel.Curr = row.Cell(2).Value.ToString();
+        //                    viewModel.Amnt = Convert.ToInt32(row.Cell(2).Value);
+        //                    viewModel.CardNumber = Convert.ToInt32(row.Cell(2).Value);
+        //                    viewModel.OperDateTime = Convert.ToDateTime(row.Cell(2).Value);
+        //                }
+        //                catch (Exception e)
+        //                {
+        //                    //logging
+        //                }
+        //                terminals.Add(viewModel);
+
+        //            }
+        //        }
+        //    }
+        //    return terminals;
+        //}
     }
 }

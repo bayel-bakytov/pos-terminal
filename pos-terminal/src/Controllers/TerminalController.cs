@@ -3,6 +3,10 @@ using EatAndDrink.Models;
 using EatAndDrink.Services;
 using EatAndDrink.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
+using System.IO;
+
+
 namespace EatAndDrink.Controllers
 {
     public class TerminalController : Controller
@@ -11,8 +15,7 @@ namespace EatAndDrink.Controllers
         private ExcelService excelService;
         private static TerminalDBContext TerminalDB;
         private List<Terminal> listOfTerminal;
-        private List<TotalByCurrency> tot;
-        private string help = "123";
+
         [HttpGet]
         public IActionResult Index()
         {
@@ -25,6 +28,32 @@ namespace EatAndDrink.Controllers
             return View();
         }
 
+        public IActionResult currencyKGS()
+        {
+            return View(terminalService.totalByCurrency("KGS"));
+        }
+
+        public IActionResult currencyEUR()
+        {
+
+            return View(terminalService.totalByCurrency("EUR"));
+        }
+
+        public IActionResult currencyUSD()
+        {
+            return View(terminalService.totalByCurrency("USD"));
+        }
+
+        public IActionResult currencyKZT()
+        {
+            return View(terminalService.totalByCurrency("KZT"));
+        }
+
+        public IActionResult totalAmount()
+        {
+
+            return View(terminalService.amountByCardNumber());
+        }
         [HttpGet]
         public IActionResult Report()
         {
@@ -50,7 +79,7 @@ namespace EatAndDrink.Controllers
             }
         }
 
-     
+
         [HttpGet]
         public IActionResult Filter(string filterBy, string filter)
         {
@@ -58,17 +87,17 @@ namespace EatAndDrink.Controllers
             {
                 listOfTerminal = terminalService.filter(filterBy, filter);
                 return View(listOfTerminal);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 return RedirectToAction("NotFound");
             }
         }
 
-      
-        public ActionResult ExportFullReport()
+        public ActionResult ExportFullReport(ExcelService excelService)
         {
-            ExcelService excelService = new ExcelService();
-            return excelService.ExportFull(TerminalDB.Terminal.ToList());
+            ExcelService excelServic = new ExcelService();
+            return excelServic.ExportFull(TerminalDB.Terminal.ToList());
         }
 
         public ActionResult ExportByTotalCurrency()
@@ -79,27 +108,101 @@ namespace EatAndDrink.Controllers
 
         public IActionResult TotalCurrency(string totalBy)
         {
-            tot = terminalService.totalByCurrency(totalBy);
-            //help = totalBy;
-            //foreach (var a in tot)
-            //{
-            //    Console.WriteLine("this a " + a.TotalKgs);
-            //}
-            //excelService = new ExcelService();
-            //excelService.ExportByCurrency(tot);
             return View(terminalService.totalByCurrency(totalBy));
         }
-        public ActionResult ExportByCurrency()
+        public ActionResult ExportByKGS()
         {
-            //foreach (var a in tot)
-            //{
-            //    Console.WriteLine(a.TotalKgs);
-            //}
-            Console.WriteLine("Help" + help);
             excelService = new ExcelService();
-            return excelService.ExportByCurrency(tot);
+            return excelService.ExportByCurrency(terminalService.totalByCurrency("KGS"));
+        }
+
+        public ActionResult ExportByKZT()
+        {
+            excelService = new ExcelService();
+            return excelService.ExportByCurrency(terminalService.totalByCurrency("KZT"));
+        }
+
+        public ActionResult ExportByUSD()
+        {
+            excelService = new ExcelService();
+            return excelService.ExportByCurrency(terminalService.totalByCurrency("USD"));
+        }
+
+        public ActionResult ExportByEUR()
+        {
+            excelService = new ExcelService();
+            return excelService.ExportByCurrency(terminalService.totalByCurrency("EUR"));
+        }
+
+        public ActionResult ExportTotal()
+        {
+            excelService = new ExcelService();
+            return excelService.ExportTotal(terminalService.amountByCardNumber());
         }
 
 
+        public async Task<List<Terminal>> test(IFormFile file)
+        {
+            var list = new List<Terminal>();
+            Terminal term = new Terminal();
+            using (var stream = new MemoryStream())
+            {
+                await file.CopyToAsync(stream);
+                using (var package = new ExcelPackage(stream))
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                    var rowcount = worksheet.Dimension.Rows;
+                    for (int row = 2; row <= rowcount; row++)
+                    {
+                        
+                        term = new Terminal()
+                        {
+                            DeviceCode = Convert.ToInt32(worksheet.Cells[row, 1].Value),
+                            Curr = Convert.ToString(worksheet.Cells[row, 2].Value),
+                            Amnt = Convert.ToDouble(worksheet.Cells[row, 3].Value),
+                            CardNumber = Convert.ToInt32(worksheet.Cells[row, 4].Value),
+                            OperDateTime = Convert.ToDateTime(worksheet.Cells[row, 5].Value)
+                        };
+                        list.Add(term);
+                    }
+                }
+            }
+            return list;
+        }
+
+
+
+        //public List<Terminal> test(IFormFile fileExcel)
+        //{
+        //    List<Terminal> terminals = new List<Terminal>();
+        //    Terminal viewModel = null;
+        //    using (XLWorkbook workBook = new XLWorkbook(fileExcel.OpenReadStream(), XLEventTracking.Disabled))
+        //    {
+        //        foreach (IXLWorksheet worksheet in workBook.Worksheets)
+        //        {
+
+
+        //            foreach (IXLRow row in worksheet.RowsUsed().Skip(1))
+        //            {
+        //                try
+        //                {
+        //                    viewModel = new Terminal();
+        //                    viewModel.DeviceCode = Convert.ToInt32(row.Cell(1).Value);
+        //                    viewModel.Curr = row.Cell(2).Value.ToString();
+        //                    viewModel.Amnt = Convert.ToInt32(row.Cell(2).Value);
+        //                    viewModel.CardNumber = Convert.ToInt32(row.Cell(2).Value);
+        //                    viewModel.OperDateTime = Convert.ToDateTime(row.Cell(2).Value);
+        //                }
+        //                catch (Exception e)
+        //                {
+        //                    //logging
+        //                }
+        //                terminals.Add(viewModel);
+
+        //            }
+        //        }
+        //    }
+        //    return terminals;
+        //}
     }
 }

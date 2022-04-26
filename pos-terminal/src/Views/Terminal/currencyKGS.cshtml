@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<EatAndDrink.ViewModels.TotalByCurrency>
 
 <div>
-    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "ExportByCurrency"})">Экспорт в Excel</a>
+    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "ExportByKGS"})">Экспорт в Excel</a>
 </div>
 
 </div>
@@ -9,7 +9,7 @@
     <thead>
         <tr>
             <td>CardNumber</td>
-            <td>Total by KGS</td>
+            <td>Total </td>
         </tr>
     </thead>
     @foreach (var item in Model)

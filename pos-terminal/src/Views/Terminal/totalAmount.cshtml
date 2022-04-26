@@ -1,0 +1,25 @@
+﻿@model IEnumerable<EatAndDrink.ViewModels.TotalByCurrency>
+
+@{
+    ViewData["Title"] = "Filter Page";
+}
+<div>
+    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "ExportTotal"})">Export Excel</a>
+</div>
+<table class="table">
+    <thead>
+        <tr> 
+            <td>Card Number</td>
+            <td>Amount</td>
+        </tr>
+    </thead>
+ @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.CardNumber</td>
+            <td>@item.Total</td>
+           
+        </tr>
+    }
+  </table>
+

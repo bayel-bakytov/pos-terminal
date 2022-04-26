@@ -107,60 +107,6 @@ namespace EatAndDrink.Services
             }
         }
 
-        //public List<TotalDevice> totalByCurrency(string curren)
-        //{
-        //    Console.WriteLine(curren);
-
-        //    using (TerminalDB = new TerminalDBContext())
-        //    {
-        //        double total = 0;
-        //        List<Terminal> devices = TerminalDB.Terminal.ToList();
-        //        list = devices.Where(x => x.Curr.Equals(curren) || curren == null).ToList();
-
-        //        List<TotalDevice> totalDevices = new List<TotalDevice>();
-        //        TotalDevice totalDevice;
-
-        //        destinct = list.Select(c => c.CardNumber).Distinct().ToList();
-
-        //        for (int j = 0; j < destinct.Count; j++)
-        //        {
-        //            total = 0;
-        //            devices = filter("CardNumber", destinct[j].ToString());
-
-
-        //            for (int i = 0; i < list.Count; i++)
-        //            {
-        //                total += list[i].Amnt;
-
-        //            }
-
-        //            totalDevice = new TotalDevice();
-        //            totalDevice.CardNumber = destinct[j];
-        //            if (curren.Equals("KGS"))
-        //            {
-        //                totalDevice.TotalKgs = total;
-        //            }
-        //            else if (curren.Equals("EUR"))
-        //            {
-        //                totalDevice.TotalEur = total;
-        //            }
-        //            else if (curren.Equals("KZT"))
-        //            {
-        //                totalDevice.TotalKzt = total;
-        //            }
-        //            else if (curren.Equals("USD"))
-        //            {
-        //                totalDevice.TotalUsd = total;
-        //            }
-
-
-        //            totalDevices.Add(totalDevice);
-        //        }
-        //        return totalDevices;
-        //    }
-        //}
-
-
         public List<TotalByCurrency> totalByCurrency(string curren)
         {
             Console.WriteLine(curren);
@@ -190,10 +136,58 @@ namespace EatAndDrink.Services
                     totalDevice = new TotalByCurrency();
                     totalDevice.CardNumber = destinct[j];
                     totalDevice.Total = total;
-                   // totalDevice.Curr = curren;
                     totalDevices.Add(totalDevice);
                 }
                 return totalDevices;
+            }
+        }
+
+        public List<TotalByCurrency> amountByCardNumber()
+        {
+            using (TerminalDB = new TerminalDBContext())
+            {
+
+                List<TotalByCurrency> totalAmount = new List<TotalByCurrency>();
+
+                double total = 0;
+                List<Terminal> cardNumbers = TerminalDB.Terminal.ToList();
+                List<Terminal> term;
+                TotalByCurrency amount;
+                destinct = cardNumbers.Select(c => c.CardNumber).Distinct().ToList();
+                for (int i = 0; i < destinct.Count; i++)
+                {
+                    total = 0;
+                    term = filter("CardNumber", destinct[i].ToString());
+                    for (int j = 0; j < term.Count; j++)
+                    {
+                        if (term[j].Curr.Equals("KGS"))
+                        {
+                            total += term[j].Amnt;
+                        } else if (term[j].Curr.Equals("KZD"))
+                        {
+                            total += term[j].Amnt * 0.18;
+                        }
+                        else if (term[j].Curr.Equals("USD"))
+                        {
+                            total += term[j].Amnt * 85;
+                        }
+                        else if (term[j].Curr.Equals("EUR"))
+                        {
+                            total += term[j].Amnt * 95;
+                        }
+                    }
+                    amount = new TotalByCurrency()
+                    {
+                        CardNumber = destinct[i],
+                        Total = total,  
+                    };
+                    totalAmount.Add(amount);
+                }
+                foreach (var i in totalAmount)
+                {
+                    Console.WriteLine(i.CardNumber + " " + i.Total);
+                }
+                return totalAmount;
             }
         }
     }

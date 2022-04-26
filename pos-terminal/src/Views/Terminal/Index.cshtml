@@ -25,16 +25,32 @@
     <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "Report"})">Totals by Currency</a>
 </div>
 
+<div>
+    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "totalAmount"})">Totals</a>
+</div>
+
 @using (Html.BeginForm("TotalCurrency","Terminal",FormMethod.Get))
 {
     <b>Filter by</b>
-    @Html.RadioButton("totalBy", "KGS",true) <text>KGS</text>
-    @Html.RadioButton("totalBy", "KZT") <text>KZT</text>
-    @Html.RadioButton("totalBy", "USD") <text>USD</text>
-    @Html.RadioButton("totalBy", "EUR") <text>EUR</text>
+    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "currencyKGS"})">KGS</a>
+    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "currencyUSD"})">USD</a>
+    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "currencyKZT"})">KZT</a>
+    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "currencyEUR"})">EUR</a>
     <br />
-    <input type="submit" value="Total Currency" />
 }
+
+<div>
+    @using (Html.BeginForm("test", "Terminal", FormMethod.Post, new { enctype = "multipart/form-data", id = "frm-excel" }))
+    {
+        <div>
+            Загрузите Excel-файл:
+            <input type="file" name="file" id="file" />
+            <div>
+                <input type="submit" value="Загрузить" />
+            </div>
+        </div>
+    }
+</div>
 
 <table class="table">
     <thead>
