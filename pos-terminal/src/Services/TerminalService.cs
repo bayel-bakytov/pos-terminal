@@ -185,5 +185,20 @@ namespace EatAndDrink.Services
             return totalAmount;
 
         }
+
+        public List<Terminal> filterByDate(List<Terminal> listOfTerminal, string fromDate, string toDate)
+        {
+            List<Terminal> result = new List<Terminal>();
+            DateTime from = Convert.ToDateTime(fromDate);
+            DateTime to = Convert.ToDateTime(toDate);
+            for (int i = 0; i < listOfTerminal.Count; i++)
+            {
+                if (from < listOfTerminal[i].OperDateTime && to > listOfTerminal[i].OperDateTime)
+                {
+                    result.Add(listOfTerminal[i]);
+                }
+            }             
+            return result;
+        }
     }
 }

@@ -16,7 +16,14 @@
     @Html.TextBox("filter")
     <input type="submit" value="Filter" />
 }
-
+<div>
+    @using (Html.BeginForm("By", "Terminal", FormMethod.Get))
+    {
+        <input type="date" name="fromDate">
+        <input type="date" name="toDate">
+        <input type="submit" value="FilterByDate" />
+    }
+</div>
 
 <div>
     <a href="@Url.RouteUrl("Default", new { controller = "Terminal", action = "ExportFullReport"})">Export Excel</a>

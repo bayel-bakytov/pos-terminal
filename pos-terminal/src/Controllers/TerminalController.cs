@@ -22,10 +22,27 @@ namespace EatAndDrink.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            CurrencyParse c = new CurrencyParse();
             TerminalDB = new TerminalDBContext();
             listOfTerminal = TerminalDB.Terminal.ToList();
             return View(listOfTerminal);
+        }
+
+        [HttpGet]
+        public ActionResult By(string fromDate, string toDate)
+        {
+            DateTime from = Convert.ToDateTime(fromDate);
+            DateTime to = Convert.ToDateTime(toDate);
+            Console.WriteLine(from);
+            Console.WriteLine(to);
+            try
+            {
+                listOfTerminal = terminalService.filterByDate(listOfTerminal, fromDate, toDate);
+                return View(listOfTerminal);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("NotFound");
+            }
         }
 
         public IActionResult Import(IFormFile file)
@@ -87,7 +104,7 @@ namespace EatAndDrink.Controllers
         public ActionResult ExportFullReport(ExcelService excelService)
         {
             ExcelService excelServic = new ExcelService();
-            return excelServic.ExportFull(TerminalDB.Terminal.ToList());
+            return excelServic.ExportFull(listOfTerminal);
         }
 
         public ActionResult ExportByTotalCurrency()
