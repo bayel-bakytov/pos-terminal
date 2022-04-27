@@ -6,7 +6,7 @@ using System.IO;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-
+using OfficeOpenXml;
 
 namespace EatAndDrink.Services
 {
@@ -148,37 +148,33 @@ namespace EatAndDrink.Services
             }
         }
 
-        //public List<Terminal> Import(HttpPostedFileBase fileExcel)
-        //{
-        //    List<Terminal> terminals = new List<Terminal>();
-        //    Terminal viewModel = null;
-        //    using (XLWorkbook workBook = new XLWorkbook(fileExcel, XLEventTracking.Disabled))
-        //    {
-        //        foreach (IXLWorksheet worksheet in workBook.Worksheets)
-        //        {
+        public List<Terminal> ImportExcel(IFormFile file)
+        {
+            var list = new List<Terminal>();
+            Terminal term = new Terminal();
+            using (var stream = new MemoryStream())
+            {
+                file.CopyToAsync(stream);
+                using (var package = new ExcelPackage(stream))
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                    var rowcount = worksheet.Dimension.Rows;
+                    for (int row = 2; row <= rowcount; row++)
+                    {
 
-
-        //            foreach (IXLRow row in worksheet.RowsUsed().Skip(1))
-        //            {
-        //                try
-        //                {
-        //                    viewModel = new Terminal();
-        //                    viewModel.DeviceCode = Convert.ToInt32(row.Cell(1).Value);
-        //                    viewModel.Curr = row.Cell(2).Value.ToString();
-        //                    viewModel.Amnt = Convert.ToInt32(row.Cell(2).Value);
-        //                    viewModel.CardNumber = Convert.ToInt32(row.Cell(2).Value);
-        //                    viewModel.OperDateTime = Convert.ToDateTime(row.Cell(2).Value);
-        //                }
-        //                catch (Exception e)
-        //                {
-        //                    //logging
-        //                }
-        //                terminals.Add(viewModel);
-
-        //            }
-        //        }
-        //    }
-        //    return terminals;
-        //}
+                        term = new Terminal()
+                        {
+                            DeviceCode = Convert.ToInt32(worksheet.Cells[row, 1].Value),
+                            Curr = Convert.ToString(worksheet.Cells[row, 2].Value),
+                            Amnt = Convert.ToDouble(worksheet.Cells[row, 3].Value),
+                            CardNumber = Convert.ToInt32(worksheet.Cells[row, 4].Value),
+                            OperDateTime = Convert.ToDateTime(worksheet.Cells[row, 5].Value)
+                        };
+                        list.Add(term);
+                    }
+                }
+            }
+            return list;
+        }
     }
 }

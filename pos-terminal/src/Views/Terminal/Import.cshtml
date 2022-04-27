@@ -39,19 +39,6 @@
     <br />
 }
 
-<div>
-    @using (Html.BeginForm("Import", "Terminal", FormMethod.Post, new { enctype = "multipart/form-data", id = "frm-excel" }))
-    {
-        <div>
-            Загрузите Excel-файл:
-            <input type="file" name="file" id="file" />
-            <div>
-                <input type="submit" value="Загрузить" />
-            </div>
-        </div>
-    }
-</div>
-
 <table class="table">
     <thead>
         <tr>
@@ -77,12 +64,6 @@
                 <a class="btn" asp-controller="Terminal" asp-action="More" asp-route-card="@item.CardNumber">more</a>
             </td>
         </tr>
-        
     }
     </table>
-    <div>
-      
-    
-    
-    </div>
 
