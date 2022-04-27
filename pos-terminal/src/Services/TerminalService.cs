@@ -10,18 +10,6 @@ namespace EatAndDrink.Services
         private List<Terminal> list;
         private List<int> destinct;
 
-        //
-        // public List<Terminal> moreAboutCardNumber(int card)
-        // {
-        //     using (TerminalDB = new TerminalDBContext())
-        //     {
-        //         list = TerminalDB.Terminal.Where(x => x.CardNumber == card).ToList();
-        //         return list;
-        //     }
-        // }
-
-
-        //Функция фильтрации, возвращает List<Terminal> list
         public List<Terminal> filter(List<Terminal> excelList, string filterBy, string filter)
         {
 
@@ -197,8 +185,5 @@ namespace EatAndDrink.Services
             return totalAmount;
 
         }
-
-
-
     }
 }

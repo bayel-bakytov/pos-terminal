@@ -47,7 +47,6 @@ namespace EatAndDrink.Controllers
 
         public IActionResult currencyEUR()
         {
-
             return View(terminalService.totalByCurrency(listOfTerminal,"EUR"));
         }
 
@@ -71,26 +70,6 @@ namespace EatAndDrink.Controllers
         {
             return View(terminalService.totalByDevice(listOfTerminal).ToList());
         }
-
-        //[HttpGet]
-        //public IActionResult More(int card)
-        //{
-        //    try
-        //    {
-        //        listOfTerminal = terminalService.moreAboutCardNumber(card);
-        //        Console.WriteLine(listOfTerminal.Count);
-        //        if (listOfTerminal.Count == 0)
-        //        {
-        //            return RedirectToAction("NotFound");
-        //        }
-        //        return View(listOfTerminal);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return RedirectToAction("NotFound");
-        //    }
-        //}
-
 
         [HttpGet]
         public IActionResult Filter(string filterBy, string filter)

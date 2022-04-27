@@ -5,7 +5,7 @@
 }
 
 
-@using (Html.BeginForm("Filter","Terminal",FormMethod.Get))
+@using (Html.BeginForm("Filter", "Terminal", FormMethod.Get))
 {
     <b>Filter by</b>
     @Html.RadioButton("filterBy", "CardNumber",true) <text>Card number</text>
@@ -13,29 +13,30 @@
     @Html.RadioButton("filterBy", "Amnt") <text>Amount</text>
     @Html.RadioButton("filterBy", "Curr") <text>Currency</text>
     <br />
-    @Html.TextBox("filter") <input type="submit" value="Filter" />
+    @Html.TextBox("filter")
+    <input type="submit" value="Filter" />
 }
 
 
 <div>
-    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "ExportFullReport"})">Export Excel</a>
+    <a href="@Url.RouteUrl("Default", new { controller = "Terminal", action = "ExportFullReport"})">Export Excel</a>
 </div>
 
 <div>
-    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "Report"})">Totals by Currency</a>
+    <a href="@Url.RouteUrl("Default", new { controller = "Terminal", action = "Report"})">Totals by Currency</a>
 </div>
 
 <div>
-    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "totalAmount"})">Totals</a>
+    <a href="@Url.RouteUrl("Default", new { controller = "Terminal", action = "totalAmount"})">Totals</a>
 </div>
 
-@using (Html.BeginForm("TotalCurrency","Terminal",FormMethod.Get))
+@using (Html.BeginForm("TotalCurrency", "Terminal", FormMethod.Get))
 {
     <b>Filter by</b>
-    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "currencyKGS"})">KGS</a>
-    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "currencyUSD"})">USD</a>
-    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "currencyKZT"})">KZT</a>
-    <a href = "@Url.RouteUrl("Default", new { controller = "Terminal", action = "currencyEUR"})">EUR</a>
+    <a href="@Url.RouteUrl("Default", new { controller = "Terminal", action = "currencyKGS"})">KGS</a>
+    <a href="@Url.RouteUrl("Default", new { controller = "Terminal", action = "currencyUSD"})">USD</a>
+    <a href="@Url.RouteUrl("Default", new { controller = "Terminal", action = "currencyKZT"})">KZT</a>
+    <a href="@Url.RouteUrl("Default", new { controller = "Terminal", action = "currencyEUR"})">EUR</a>
     <br />
 }
 
@@ -52,37 +53,99 @@
     }
 </div>
 
+<div>
+
+
+</div>
+
 <table class="table">
     <thead>
         <tr>
-            <td>ID</td>
             <td>DeviceCode</td>
             <td>Amount</td>
             <td>Currency</td>
             <td>Card Number</td>
             <td>Date</td>
-            <td>Actions</td>
         </tr>
     </thead>
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>@item.Id</td>
-            <td>@item.DeviceCode</td>
-            <td>@item.Amnt</td>
-            <td>@item.Curr</td>
-            <td>@item.CardNumber</td>
-            <td>@item.OperDateTime</td>
-            <td>
-                <a class="btn" asp-controller="Terminal" asp-action="More" asp-route-card="@item.CardNumber">more</a>
-            </td>
-        </tr>
-        
+    @{
+        int count = Model.Count() / 10;
+        int i = 1;
+        int a = 1;
+        @foreach (var item in Model)
+        {
+
+            <tr class="rec" data-page="@a">
+                <td>@item.DeviceCode</td>
+                <td>@item.Amnt</td>
+                <td>@item.Curr</td>
+                <td>@item.CardNumber</td>
+                <td>@item.OperDateTime</td>
+            </tr>
+            if (i % 10 == 0)
+            {
+                a = a + 1;
+            }
+            i++;
+
+        }
     }
-    </table>
-    <div>
-      
-    
-    
-    </div>
+
+</table>
+<div class="page-btn-wrapp">
+    @{
+        for (int j = 1; j < count + 1; j++)
+        {
+            <span class="btn-page" data-page="@j">@j </span>
+        }
+    }
+</div>
+<script>
+    var recs = document.getElementsByClassName("rec");
+    var btns = document.getElementsByClassName("btn-page");
+
+    var changePage = function() {
+        var data = this.getAttribute("data-page");
+        for (var i = 0; i < recs.length; i++) {
+            if(recs[i].getAttribute("data-page") == data){
+                recs[i].style.display = "table-row";
+            }else{
+                recs[i].style.display = "none";
+            }
+        }
+    };
+    for (var i = 0; i < btns.length; i++) {
+
+        btns[i].addEventListener('click', changePage, false);
+    }
+
+</script>
+
+
+<div>
+</div>
+
+<style>
+    .page-btn-wrapp {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        padding: 10px;
+    }
+
+        .page-btn-wrapp span {
+            padding: 10px 5px;
+            background-color: #b7b7b7;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+    .rec {
+        display: none;
+    }
+
+        .rec[data-page='1'] {
+            display: table-row;
+        }
+</style>
 
